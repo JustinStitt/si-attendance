@@ -6,6 +6,11 @@ app = Flask(__name__)
 api = Api(app)
 
 
+class HelloWorld(Resource):
+    def get(self):
+        return {"Hello": "World"}
+
+
 class SignIn(Resource):
     def post(self):
         args = request.args
@@ -16,5 +21,6 @@ class SignIn(Resource):
 
 
 api.add_resource(SignIn, "/signin")
+api.add_resource(HelloWorld, "/")
 
 app.run()
