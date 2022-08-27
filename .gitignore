@@ -1,0 +1,4 @@
+*.cfg
+*.vim
+__pycache__
+*.*.un~
