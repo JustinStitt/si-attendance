@@ -22,5 +22,3 @@ class SignIn(Resource):
 
 api.add_resource(SignIn, "/signin")
 api.add_resource(HelloWorld, "/")
-
-app.run()
