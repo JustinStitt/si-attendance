@@ -85,6 +85,8 @@ class Attendance:
         return response
 
     def _getCourseID(self, content):
+        # TODO:justinstitt map courses to course ids. This will enable students
+        # TODO--: to join courses they aren't enrolled in.
         needle = "(?<=course_id=)\d+"
         result = re.search(needle, content).group()
         return result
