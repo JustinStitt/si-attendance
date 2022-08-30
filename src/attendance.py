@@ -61,7 +61,7 @@ class Attendance:
         return response
 
     def _selectCourse(self, content, course_selection):
-        needle = "(?<=Click here to choose: ).*?-\d+(?=-)"
+        needle = "(?<=Click here to choose: ).*?\d+(?=[A-Za-z]*-)"
         course_matches = [m for m in re.finditer(needle, content)]
         course_options = [content[m.start() : m.end()].strip() for m in course_matches]
         # TODO:justinstitt some sort of fuzzy matching for courses?

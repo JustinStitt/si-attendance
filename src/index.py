@@ -4,7 +4,7 @@ from attendance import Attendance
 from flask_cors import CORS
 import logging
 
-logging.basicConfig(filename="record.log", level=logging.DEBUG)
+# logging.basicConfig(filename="record.log", level=logging.DEBUG)
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 api = Api(app)
