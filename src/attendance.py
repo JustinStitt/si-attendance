@@ -12,7 +12,7 @@ class Attendance:
     def __init__(self):
         self._cookies = {
             "apt.uid": "AP-ANT1MXI6D1QH-2-1661818966007-83815959.0.2.f37f524a-a8fe-4d8f-b456-c247ba8e82d3",
-            "_campus_session": "699b8d4be8186319dd8bec428b8aad60",
+            "_campus_session": "0bd2ff7256bb6f43fe5f224b5f4f3af9",
             "apt.sid": "AP-ANT1MXI6D1QH-2-1662173786284-18422428",
         }
 
