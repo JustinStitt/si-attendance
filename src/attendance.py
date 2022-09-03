@@ -11,10 +11,11 @@ attendance.
 class Attendance:
     def __init__(self):
         self._cookies = {
-            "apt.uid": "AP-ANT1MXI6D1QH-2-1661582339717-13974216.0.2.f37f524a-a8fe-4d8f-b456-c247ba8e82d3",
-            "_campus_session": "6093f5b26c2deb962a40434ae70e56f0",
-            "apt.sid": "AP-ANT1MXI6D1QH-2-1661582339717-93577811",
+            "apt.uid": "AP-ANT1MXI6D1QH-2-1661818966007-83815959.0.2.f37f524a-a8fe-4d8f-b456-c247ba8e82d3",
+            "_campus_session": "699b8d4be8186319dd8bec428b8aad60",
+            "apt.sid": "AP-ANT1MXI6D1QH-2-1662173786284-18422428",
         }
+
         self._headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
