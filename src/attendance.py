@@ -1,6 +1,7 @@
 import requests
 from utils import findCsrfInRawHTML
 import re
+import json
 
 """
 Attendance class will carry out all the operations required to log student
@@ -60,6 +61,14 @@ class Attendance:
             _url, headers=self._headers, cookies=self._cookies, data=_data
         )
         return response
+
+    def GetCourses(self, cwid: str):
+        response = self._enterCWID(cwid)
+        content = str(response.content)
+        needle = '(?<=Click here to choose: )\w*-\d+[a-zA-z]*(-\d+)*.+?(?=\(|")'
+        courses_matches = [m for m in re.finditer(needle, content)]
+        courses = [content[m.start() : m.end()].strip() for m in courses_matches]
+        return json.dumps(courses)
 
     def _selectCourse(self, content, course_selection):
         needle = "(?<=Click here to choose: ).*?\d+(?=[A-Za-z]*-)"

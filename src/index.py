@@ -15,6 +15,13 @@ class HelloWorld(Resource):
         return {"Hello": "World"}
 
 
+class GetCourses(Resource):
+    def get(self):
+        args = request.args
+        bot = Attendance()
+        return bot.GetCourses(args["cwid"])
+
+
 class SignIn(Resource):
     def get(self):
         args = request.args
@@ -30,3 +37,4 @@ class SignIn(Resource):
 
 api.add_resource(SignIn, "/signin")
 api.add_resource(HelloWorld, "/")
+api.add_resource(GetCourses, "/getcourses")
