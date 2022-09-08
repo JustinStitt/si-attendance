@@ -13,8 +13,9 @@ class Attendance:
     def __init__(self):
         self._cookies = {
             "apt.uid": "AP-ANT1MXI6D1QH-2-1661818966007-83815959.0.2.f37f524a-a8fe-4d8f-b456-c247ba8e82d3",
-            "_campus_session": "0bd2ff7256bb6f43fe5f224b5f4f3af9",
-            "apt.sid": "AP-ANT1MXI6D1QH-2-1662173786284-18422428",
+            # TODO (justinstitt): automate retrieval of this field
+            "_campus_session": "672caed80fc5cf9206a3ccb986c71f00",  # campus session needs to be changed ~5-7 days it looks like
+            "apt.sid": "AP-ANT1MXI6D1QH-2-1662670212447-91423931",
         }
 
         self._headers = {
