@@ -6,3 +6,4 @@ requests-unixsocket==0.2.0
 simplejson==3.16.0
 urllib3==1.25.8
 Flask-Cors==3.0.10
+python-dotenv==0.21.0

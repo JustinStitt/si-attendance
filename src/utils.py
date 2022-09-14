@@ -1,3 +1,6 @@
+from random import randint
+
+
 def findCsrfInRawHTML(raw):
     raw = str(raw)
     needle = '"csrf-token" content="'
@@ -12,3 +15,7 @@ def findCsrfInRawHTML(raw):
             f"Invalid length for csrf token. Got: {len(csrf)} | Expected: 88"
         )
     return csrf
+
+
+def generateRandomSid(length=8) -> str:
+    return "".join([str(randint(0, 9)) for _ in range(length)])
