@@ -47,13 +47,15 @@ class Attendance:
 
     def signIn(self, cwid: str, course: str):
         response = self._enterCWID(cwid)
+        if type(response) == dict:
+            return response
         if response.status_code != 200:
             raise ValueError(
                 f"Not OK response code: Got: {response.status_code} | Expected: 200"
             )
         content = str(response.content)
         course_response = self._selectCourse(content, course)
-        return course_response.status_code
+        return course_response
 
     def _enterCWID(self, cwid: str):
         # auth_token = self._getAuthToken()
@@ -66,10 +68,14 @@ class Attendance:
         response = requests.post(
             _url, headers=self._headers, cookies=self._cookies, data=_data
         )
+        if str(response.content).find("Student ID") != -1:
+            return {"errmessage": "Invalid CWID"}
         return response
 
     def GetCourses(self, cwid: str):
         response = self._enterCWID(cwid)
+        if type(response) == dict:
+            return {"errmessage": "Invalid CWID"}
         content = str(response.content)
         needle = '((?<=Click here to choose: )\w*-\d+[a-zA-z]*(-\d+)*.+?(?=\(|"))'
         courses = re.findall(needle, content)
@@ -83,9 +89,9 @@ class Attendance:
         try:
             selection_idx = course_options.index(course_selection)
         except:
-            raise IndexError(
-                f"Course Selection: {course_selection} not found in course list: {course_options}"
-            )
+            error_message = {"errmessage": "You are not enrolled in this course"}
+            return error_message
+
         # get ssi and course_id immediately following correct selection
         start = course_matches[selection_idx].start()
         _magic_threshold = 256

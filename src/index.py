@@ -26,12 +26,18 @@ class SignIn(Resource):
     def get(self):
         args = request.args
         app.logger.info(f"/signin : {args}")
-        response = jsonify({"message": "request made"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
+        response = {"message": "request made", "errmessage": ""}
+        # response.headers.add("Access-Control-Allow-Origin", "*")
         if not len(args):
-            return response
+            response["errmessage"] = "Did not provide CWID or Course"
+            return jsonify(response)
         bot = Attendance()
-        bot.signIn(cwid=args["cwid"], course=args["course"])
+        bot_response = bot.signIn(cwid=args["cwid"], course=args["course"])
+        if type(bot_response) == dict:
+            response["errmessage"] = bot_response["errmessage"]
+        status = "200" if not len(response["errmessage"]) else 400
+        response = jsonify(response)
+        response.status = status
         return response
 
 
