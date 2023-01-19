@@ -12,7 +12,7 @@ api = Api(app)
 
 class HelloWorld(Resource):
     def get(self):
-        return {"Hello": "World"}
+        return {"Hello": "World2"}
 
 
 class GetCourses(Resource):
