@@ -20,7 +20,7 @@ class Attendance:
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.5",
             "Accept-Encoding": "gzip, deflate",
-            "Referer": "https://fullerton.campus.eab.com/tutor_kiosk/sessions/new?location_id=6610&term=2237",
+            "Referer": "https://fullerton.campus.eab.com/tutor_kiosk/sessions/new?location_id=6610&term=2233",
             "Upgrade-Insecure-Requests": "1",
             "Sec-Fetch-Dest": "document",
             "Sec-Fetch-User": "?1",
@@ -134,7 +134,7 @@ class Attendance:
         return response.cookies["_campus_session"]
 
     def _mintCampusSessionID(self, to_mint, auth_token):
-        _url = "https://fullerton.campus.eab.com:443/tutor_kiosk/sessions?location_id=6610&student_service_id=18762&term=2237"
+        _url = "https://fullerton.campus.eab.com:443/tutor_kiosk/sessions?location_id=6610&student_service_id=18762&term=2233"
         _headers = {
             "Cache-Control": "max-age=0",
             "Sec-Ch-Ua": '"Chromium";v="105", "Not)A;Brand";v="8"',
@@ -149,7 +149,7 @@ class Attendance:
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-User": "?1",
             "Sec-Fetch-Dest": "document",
-            "Referer": "https://fullerton.campus.eab.com/tutor_kiosk/sessions/new?location_id=6610&term=2237",
+            "Referer": "https://fullerton.campus.eab.com/tutor_kiosk/sessions/new?location_id=6610&term=2233",
             "Accept-Encoding": "gzip, deflate",
             "Accept-Language": "en-US,en;q=0.9",
         }
