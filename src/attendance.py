@@ -4,8 +4,11 @@ import re
 import json
 import os
 from dotenv import load_dotenv
+import pygsheets
 
 load_dotenv()
+gc = pygsheets.authorize(service_file="creds.json")  # load Google API Client
+sheet = gc.open("si-attendance-log")[0]
 
 """
 Attendance class will carry out all the operations required to log student

@@ -1,10 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from attendance import Attendance
+from attendance import Attendance, sheet
 from flask_cors import CORS
-import logging
+from datetime import datetime
 
-# logging.basicConfig(filename="record.log", level=logging.DEBUG)
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 api = Api(app)
@@ -35,9 +34,13 @@ class SignIn(Resource):
         bot_response = bot.signIn(cwid=args["cwid"], course=args["course"])
         if type(bot_response) == dict:
             response["errmessage"] = bot_response["errmessage"]
-        status = "200" if not len(response["errmessage"]) else 400
+        status = "200" if not len(response["errmessage"]) else "400"
         response = jsonify(response)
         response.status = status
+        print(f"{response.status=}")
+        if status == "200":
+            print("Appending to Attendance Sheet")
+            sheet.append_table([str(datetime.now()), args["course"], args["cwid"]])
         return response
 
 
