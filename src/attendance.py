@@ -57,8 +57,9 @@ class Attendance:
                 f"Not OK response code: Got: {response.status_code} | Expected: 200"
             )
         content = str(response.content)
+        student_name = self._extractNameFromContent(content)
         course_response = self._selectCourse(content, course)
-        return course_response
+        return (course_response, student_name)
 
     def _enterCWID(self, cwid: str):
         # auth_token = self._getAuthToken()
@@ -75,6 +76,11 @@ class Attendance:
             return {"errmessage": "Invalid CWID"}
         return response
 
+    def _extractNameFromContent(self, content):
+        needle = "(?<='kiosk-user-name\\\\\\'>\\\\n)\w*"
+        name = re.findall(needle, content)[0]
+        return name
+
     def GetCourses(self, cwid: str):
         response = self._enterCWID(cwid)
         if type(response) == dict:
@@ -88,7 +94,6 @@ class Attendance:
         needle = "(?<=Click here to choose: ).*?\d+(?=[A-Za-z]*-)"
         course_matches = [m for m in re.finditer(needle, content)]
         course_options = [content[m.start() : m.end()].strip() for m in course_matches]
-        # TODO:justinstitt some sort of fuzzy matching for courses?
         try:
             selection_idx = course_options.index(course_selection)
         except:
@@ -98,8 +103,8 @@ class Attendance:
         # get ssi and course_id immediately following correct selection
         start = course_matches[selection_idx].start()
         _magic_threshold = 256
-        ssi = self._getStudentServiceID(content[start : start + 256])
-        course_id = self._getCourseID(content[start : start + 256])
+        ssi = self._getStudentServiceID(content[start : start + _magic_threshold])
+        course_id = self._getCourseID(content[start : start + _magic_threshold])
         # make the post request with given info
         response = requests.post(
             f"https://fullerton.campus.eab.com/tutor_kiosk/recorded_visits?course_id={course_id}&student_service_id={ssi}",

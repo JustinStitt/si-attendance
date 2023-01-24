@@ -31,7 +31,9 @@ class SignIn(Resource):
             response["errmessage"] = "Did not provide CWID or Course"
             return jsonify(response)
         bot = Attendance()
-        bot_response = bot.signIn(cwid=args["cwid"], course=args["course"])
+        (bot_response, student_name) = bot.signIn(
+            cwid=args["cwid"], course=args["course"]
+        )
         if type(bot_response) == dict:
             response["errmessage"] = bot_response["errmessage"]
         status = "200" if not len(response["errmessage"]) else "400"
@@ -40,7 +42,9 @@ class SignIn(Resource):
         print(f"{response.status=}")
         if status == "200":
             print("Appending to Attendance Sheet")
-            sheet.append_table([str(datetime.now()), args["course"], args["cwid"]])
+            sheet.append_table(
+                [str(datetime.now()), args["course"], args["cwid"], student_name]
+            )
         return response
 
 
