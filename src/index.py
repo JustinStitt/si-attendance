@@ -3,6 +3,7 @@ from flask_restful import Resource, Api
 from attendance import Attendance, sheet
 from flask_cors import CORS
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -41,9 +42,12 @@ class SignIn(Resource):
         response.status = status
         print(f"{response.status=}")
         if status == "200":
+            pst_time = pytz.utc.localize(datetime.utcnow()).astimezone(
+                pytz.timezone("US/Pacific")
+            )
             print("Appending to Attendance Sheet")
             sheet.append_table(
-                [str(datetime.now()), args["course"], args["cwid"], student_name]
+                [str(pst_time), args["course"], args["cwid"], student_name]
             )
         return response
 
