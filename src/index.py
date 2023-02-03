@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
-from attendance import Attendance, sheet
+from attendance import Attendance
 from flask_cors import CORS
-from datetime import datetime
-import pytz
 
 app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
@@ -42,16 +40,25 @@ class SignIn(Resource):
         response.status = status
         print(f"{response.status=}")
         if status == "200":
-            pst_time = pytz.utc.localize(datetime.utcnow()).astimezone(
-                pytz.timezone("US/Pacific")
-            )
-            print("Appending to Attendance Sheet")
-            sheet.append_table(
-                [str(pst_time), args["course"], args["cwid"], student_name]
-            )
+            bot.logToSheet([args["course"], args["cwid"], student_name])
         return response
+
+
+"""
+Special route for logging students with No CWID to a Google Sheet. They will not
+be signed into TitanNet
+"""
+
+
+class LogNonCWIDToSheet(Resource):
+    def get(self):
+        args = request.args
+        app.logger.info(f"/noncwidsignin : {args}")
+        bot = Attendance()
+        bot.logToSheet([args["course"], args["nonCWIDStatus"], args["name"]])
 
 
 api.add_resource(SignIn, "/signin")
 api.add_resource(HelloWorld, "/")
 api.add_resource(GetCourses, "/getcourses")
+api.add_resource(LogNonCWIDToSheet, "/noncwidsignin")

@@ -5,10 +5,15 @@ import json
 import os
 from dotenv import load_dotenv
 import pygsheets
+from datetime import datetime
+import pytz
 
 load_dotenv()
-gc = pygsheets.authorize(service_file="creds.json")  # load Google API Client
-sheet = gc.open("si-attendance-log")[0]
+try:
+    gc = pygsheets.authorize(service_file="creds.json")  # load Google API Client
+    sheet = gc.open("si-attendance-log")[0]
+except:
+    print("Error: Failed to Connect to Google Sheet!")
 
 """
 Attendance class will carry out all the operations required to log student
@@ -169,3 +174,9 @@ class Attendance:
         _data = {"_method": "post", "authenticity_token": auth_token}
         response = requests.post(_url, headers=_headers, cookies=_cookies, data=_data)
         return response.ok
+
+    def logToSheet(self, row):
+        pst_time = pytz.utc.localize(datetime.utcnow()).astimezone(
+            pytz.timezone("US/Pacific")
+        )
+        sheet.append_table([str(pst_time), *row])
