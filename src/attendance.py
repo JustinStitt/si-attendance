@@ -23,7 +23,7 @@ attendance.
 
 class Attendance:
     def __init__(self):
-        self._term = 2237  # must determine each new semester
+        self._term = 2243  # must determine each new semester
         self._headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
