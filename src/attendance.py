@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import pygsheets
 from datetime import datetime
 import pytz
+import sys
 
 load_dotenv()
 try:
@@ -23,7 +24,7 @@ attendance.
 
 class Attendance:
     def __init__(self):
-        self._term = 2243  # must determine each new semester
+        self._term = None
         self._headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -145,7 +146,47 @@ class Attendance:
         response = requests.post(
             _url, headers=self._headers, json=_json, cookies=_cookies
         )
+
+        self._setTermNumber()
+
         return response.cookies["_campus_session"]
+
+    def _setTermNumber(self):
+        _url = "https://fullerton.campus.eab.com:443/tutor_kiosk/sessions/new?time_zone=America%2FLos_Angeles"
+        _headers = {
+            "Sec-Ch-Ua": '"Not:A-Brand";v="99", "Chromium";v="112"',
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Sec-Ch-Ua-Platform": '"Windows"',
+            "Upgrade-Insecure-Requests": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.50 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "Sec-Fetch-Site": "same-origin",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-User": "?1",
+            "Sec-Fetch-Dest": "document",
+            "Referer": "https://fullerton.campus.eab.com/home",
+            "Accept-Encoding": "gzip, deflate",
+            "Accept-Language": "en-US,en;q=0.9",
+        }
+        _cookies = {
+            "apt.uid": "AP-ANT1MXI6D1QH-2-1661818966007-83815959.0.2.f37f524a-a8fe-4d8f-b456-c247ba8e82d3",
+            "apt.sid": "AP-ANT1MXI6D1QH-2-1706334781133-49847458",
+            "_campus_session": "132378c14c62ec83be2d892c81a61fa2",
+        }
+
+        response = requests.get(_url, cookies=_cookies, headers=_headers)
+
+        raw = response.content
+        pattern = r"(?<=term=)\d+"
+
+        term_number = None
+        try:
+            term_number = int(re.findall(pattern, raw.decode("utf-8"))[0])
+        except Exception as e:
+            print(f"Cannot parse term number as an int: {e}")
+            return
+
+        self._term = term_number
 
     def _mintCampusSessionID(self, to_mint, auth_token):
         _url = f"https://fullerton.campus.eab.com:443/tutor_kiosk/sessions?location_id=6610&student_service_id=18762&term={self._term}"
