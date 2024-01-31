@@ -30,9 +30,13 @@ class SignIn(Resource):
             response["errmessage"] = "Did not provide CWID or Course"
             return jsonify(response)
         bot = Attendance()
-        (bot_response, student_name) = bot.signIn(
-            cwid=args["cwid"], course=args["course"]
-        )
+        try:
+            (bot_response, student_name) = bot.signIn(
+                cwid=args["cwid"], course=args["course"]
+            )
+        except:
+            response["errmessage"] = "Could not find that CWID."
+            return response, 404
         if type(bot_response) == dict:
             response["errmessage"] = bot_response["errmessage"]
         status = "200" if not len(response["errmessage"]) else "400"
