@@ -21,3 +21,5 @@ export FLASK_APP=index.py && python -m flask run
 3. `vercel deploy` # generate preview
 
 4. `vercel --prod` # push to production
+
+
