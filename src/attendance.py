@@ -3,7 +3,6 @@ from utils import findCsrfInRawHTML, generateRandomSid
 import re
 import json
 import os
-from pathlib import Path
 from dotenv import load_dotenv
 import pygsheets
 from datetime import datetime
@@ -11,11 +10,9 @@ import pytz
 import sys
 
 load_dotenv()
-creds_json = Path("temp-creds.json")
-creds_json.write_text(os.environ.get("CREDS_JSON"))
 sheet = None
 try:
-    gc = pygsheets.authorize(service_account_file=creds_json)  # load Google API Client
+    gc = pygsheets.authorize(service_account_json=os.environ.get("CREDS_JSON"))  # load Google API Client
     sheet = gc.open("si-attendance-log")[0]
     print('connected to sheet.')
 except Exception as e:
@@ -217,5 +214,5 @@ class Attendance:
             sheet.append_table([str(pst_time), *row])
             return True
         else:
-            print("Failed to connect to google sheet.", os.environ.get("CREDS_JSON"))
+            print("Failed to connect to google sheet.")
             return False
