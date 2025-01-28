@@ -10,11 +10,14 @@ import pytz
 import sys
 
 load_dotenv()
+sheet = None
 try:
-    gc = pygsheets.authorize(service_file="creds.json")  # load Google API Client
+    gc = pygsheets.authorize(service_account_env_var="CREDS_JSON")  # load Google API Client
     sheet = gc.open("si-attendance-log")[0]
-except:
+    print('connected to sheet.')
+except Exception as e:
     print("Error: Failed to Connect to Google Sheet!")
+    print("Error was: ", e)
 
 """
 Attendance class will carry out all the operations required to log student
@@ -207,4 +210,9 @@ class Attendance:
         pst_time = pytz.utc.localize(datetime.utcnow()).astimezone(
             pytz.timezone("US/Pacific")
         )
-        sheet.append_table([str(pst_time), *row])
+        if sheet:
+            sheet.append_table([str(pst_time), *row])
+            return True
+        else:
+            print("Failed to connect to google sheet.")
+            return False

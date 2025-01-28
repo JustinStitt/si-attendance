@@ -40,11 +40,13 @@ class SignIn(Resource):
         if type(bot_response) == dict:
             response["errmessage"] = bot_response["errmessage"]
         status = "200" if not len(response["errmessage"]) else "400"
+        if status == "200":
+            result = bot.logToSheet([args["course"], args["cwid"], student_name])
+            if not result:
+                response['message'] = "Sucessfully signed in but couldn't log to sheet."
         response = jsonify(response)
         response.status = status
         print(f"{response.status=}")
-        if status == "200":
-            bot.logToSheet([args["course"], args["cwid"], student_name])
         return response
 
 
