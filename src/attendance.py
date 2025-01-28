@@ -12,7 +12,7 @@ import sys
 load_dotenv()
 sheet = None
 try:
-    gc = pygsheets.authorize(service_account_env_var="CREDS_JSON")  # load Google API Client
+    gc = pygsheets.authorize(service_account_json=os.environ.get("CREDS_JSON"))  # load Google API Client
     sheet = gc.open("si-attendance-log")[0]
     print('connected to sheet.')
 except Exception as e:
