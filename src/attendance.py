@@ -214,5 +214,5 @@ class Attendance:
             sheet.append_table([str(pst_time), *row])
             return True
         else:
-            print("Failed to connect to google sheet.")
+            print("Failed to connect to google sheet.", os.environ.get("CREDS_JSON"))
             return False
