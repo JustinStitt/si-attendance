@@ -102,13 +102,33 @@ class Attendance:
         return json.dumps(courses)
 
     def _selectCourse(self, content, course_selection):
-        needle = "(?<=Click here to choose: ).*?\d+(?=[A-Za-z]*-)"
+        needle = r"(?<=Click here to choose: ).*?\d+[A-Za-z]*(?=-)"
         course_matches = [m for m in re.finditer(needle, content)]
         course_options = [content[m.start() : m.end()].strip() for m in course_matches]
-        try:
-            selection_idx = course_options.index(course_selection)
-        except:
-            error_message = {"errmessage": "You are not enrolled in this course"}
+
+        specific = course_selection[-1] == "$"
+        course_selection = course_selection[:-1] if specific else course_selection
+        selection_idx: int | None = None
+        kind_of_close_but_not_specific_idx: int | None = None
+
+        for idx, option in enumerate(course_options):
+            if specific and course_selection == option:
+                selection_idx = idx
+                break
+            elif option.startswith(course_selection):
+                if not specific:
+                    selection_idx = idx
+                else:
+                    kind_of_close_but_not_specific_idx = idx
+                break
+        if selection_idx is None:
+            to_append = ""
+            if kind_of_close_but_not_specific_idx is not None:
+                close_to = course_options[kind_of_close_but_not_specific_idx]
+                to_append = f". Did you mean {close_to}?"
+            error_message = {
+                "errmessage": f"You are not enrolled in this course{to_append}"
+            }
             return error_message
 
         # get ssi and course_id immediately following correct selection
